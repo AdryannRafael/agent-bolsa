@@ -1,3 +1,37 @@
+# services:
+#   redis:
+#     image: redis:alpine
+#     container_name: redis_cache
+#     restart: always
+#     ports:
+#       - 6379:6379
+#     env_file:
+#       - ./.env
+#     volumes:
+#       # Formato: [caminho_no_servidor]:[caminho_no_conteiner]
+#       - ./redis:/data
+#     # Desativa o usuário "default" e cria um usuário ACL com senha (lidos do .env)
+#     command: >
+#       redis-server
+#       --appendonly yes
+#       --user default off
+#       --user ${REDIS_USER} on >${REDIS_PASSWORD} ~* &* +@all
+
+#   redis-commander:
+#     image: rediscommander/redis-commander:latest
+#     container_name: redis-commander
+#     restart: always
+#     env_file:
+#       - ./.env
+#     environment:
+#       - REDIS_HOST=redis
+#       - REDIS_PORT=6379
+#       - REDIS_USERNAME=${REDIS_USER}
+#       - REDIS_PASSWORD=${REDIS_PASSWORD}
+#     ports:
+#       - 16379:8081
+#     depends_on:
+#       - redis
 services:
   redis:
     image: redis:alpine
@@ -8,23 +42,13 @@ services:
     volumes:
       # Formato: [caminho_no_servidor]:[caminho_no_conteiner]
       - ./redis:/data
-    # Desativa o usuário "default" e cria um usuário ACL com senha (lidos do .env)
-    command: >
-      redis-server
-      --appendonly yes
-      --user default off
-      --user ${REDIS_USER} on >${REDIS_PASSWORD} ~* &* +@all
+    command: redis-server --requirepass @Ctc2026 --appendonly yes
 
   redis-commander:
     image: rediscommander/redis-commander:latest
     container_name: redis-commander
     restart: always
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_USERNAME=${REDIS_USER}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_HOSTS=local:redis:6379:0:@Ctc2026
     ports:
       - 16379:8081
-    depends_on:
-      - redis
