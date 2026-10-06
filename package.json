@@ -6,7 +6,9 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "brapi": "^1.8.0",
+    "elysia": "latest",
+    "yahoo-finance2": "^4.0.2"
   },
   "devDependencies": {
     "bun-types": "latest"
